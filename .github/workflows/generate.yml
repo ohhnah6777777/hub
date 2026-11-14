@@ -1,0 +1,24 @@
+name: Auto Generate Links
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate 100 links
+        run: |
+          URL="https://kootz-os.vercel.app/"
+          for i in {1..50}; do
+            echo "<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width,initial-scale=1.0'></head><body style='margin:0;overflow:hidden;'><iframe src='$URL' style='width:100vw;height:100vh;border:none;'></iframe></body></html>" > "app$i.html"
+            echo "<svg xmlns='http://w3.org' width='100%' height='100%'><foreignObject width='100%' height='100%'><iframe xmlns='http://w3.org' src='$URL' style='width:100vw;height:100vh;border:none;'></iframe></foreignObject></svg>" > "icon$i.svg"
+          done
+          git config user.name "AutoBot"
+          git config user.email "bot@://github.com"
+          git add .
+          git commit -m "Generate 100 links"
+          git push
